@@ -1,0 +1,2 @@
+place test.sh inside of caldera folder. open terminal and navigate to caldera folder run chmod +x test.sh if doesn't work do sudo chmod +x test.sh to run script 
+do ./test.sh open caldera.log file which will be created and it say that new version are being created just reload it. 
