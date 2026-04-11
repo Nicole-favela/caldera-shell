@@ -1,11 +1,17 @@
 '''
 orchestrates communication between agent and caldera
 '''
-from lll.client import generate_response
+import json
+from llm.client import generate_response, generate_chat
+from caldera import client as caldera
 
-def handle_input(user_input, memory):
-    '''
-    Handles user input according to their commands (keywords initially but could use intent for more advanced interactions)
-    Then uses provides response with prompt and session memory
-    '''
-    pass
+class AgentController:
+    def __init__(self):
+        self.memory = ConversationMemory(max_turns=15)
+    def chat(self, user_input):
+        pass
+
+
+
+
+
