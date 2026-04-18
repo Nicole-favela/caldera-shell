@@ -114,17 +114,18 @@ def create_operation():
 			"adversary" : {
 				"adversary_id": "2346dbbc-9965-4380-bec3-689a291f43b6"
 			},
-		"planner": {
-			"id": "aaa7c857-37a0-4c4a-85f7-4e9f7f30e31a"
-		},
-		"autonomous":1,
-		"auto_close": False,
-		"source": {
-			"id": "ed32b9c3-9593-4c33-b0db-e2007315096b"
-		}
-	}
-	r=requests.post(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, json=Payload ,timeout=7)
-
+			"planner": {
+				"id": "aaa7c857-37a0-4c4a-85f7-4e9f7f30e31a"
+			},
+			"autonomous":1,
+			"auto_close": False,
+			"source": {
+				"id": "ed32b9c3-9593-4c33-b0db-e2007315096b"
+			}
+		}	
+		r=requests.post(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, json=Payload ,timeout=7)
+	except Exception:
+		return false:
 	
 #Health
 def health_check():
@@ -147,9 +148,6 @@ ID:		{source['id']}
 			""")
 	except Exception:
 		return false
-
-#Reports
-
 
 
 get_sources()
