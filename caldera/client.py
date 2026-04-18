@@ -84,8 +84,48 @@ PLUGIN:		{adversary['plugin']}
 		return false
 
 # Operations
+def show_operations():
+	try:
+		r = requests.get(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, timeout=7)
+		operations=r.json()
+		for operation in operations:
+			print ("-" * 235)
+			print(f"""
+NAME:		{operation['name']}
+ID:		{operation['id']}
+ADVERSARY: 	{operation['adversary']}
+JITTER:		{operation['jitter']}
+PLANNER:	{operation['planner']}
+STATE:		{operation['state']}
+OBFUSCATOR: 	{operation['obfuscator']}
+AUTONOMOUS:	{operation['autonomous']}
+AUTO-CLOSE:	{operation['auto_close']}
+OBJECTIVE:	{operation['objective']}
+USE LEARNNING PARSERES:	{operation['use_learning_parsers']}
+SOURCE: 	{operation['source']}
+			""")
+	except Exception:
+		return false
+		
+def create_operation():
+	try:
+		Payload={
+			"name": "test6",
+			"adversary" : {
+				"adversary_id": "2346dbbc-9965-4380-bec3-689a291f43b6"
+			},
+		"planner": {
+			"id": "aaa7c857-37a0-4c4a-85f7-4e9f7f30e31a"
+		},
+		"autonomous":1,
+		"auto_close": False,
+		"source": {
+			"id": "ed32b9c3-9593-4c33-b0db-e2007315096b"
+		}
+	}
+	r=requests.post(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, json=Payload ,timeout=7)
 
-
+	
 #Health
 def health_check():
     try:
@@ -94,5 +134,22 @@ def health_check():
     except Exception:
         return False
 
+#Sources
+def get_sources():
+	try:
+		r = requests.get(f"{CALDERA_URL}/api/v2/sources", headers = HEADERS, timeout=7)
+		sources=r.json()
+		for source in sources:
+			print ("-" * 235)
+			print(f"""
+NAME:		{source['name']}
+ID:		{source['id']}
+			""")
+	except Exception:
+		return false
 
-print(show_adversaries())
+#Reports
+
+
+
+get_sources()
