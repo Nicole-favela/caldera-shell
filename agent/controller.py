@@ -4,10 +4,7 @@ orchestrates communication between agent and caldera
 import json
 from llm.client import generate_response, generate_chat
 from caldera import client as caldera
-<<<<<<< HEAD
-=======
 from llm.prompts import SYSTEM_PROMPT
->>>>>>> master
 from agent.memory import ConversationMemory
 
 class AgentController:
@@ -22,7 +19,7 @@ class AgentController:
         messages = self.memory.get_messages()
         if context and context != "No active CALDERA session.":
             messages = [{"role": "system", "content": f"Current state: {context}"}]
-        llm_response = generate_chat(messages, system = SYSTEM_PROMPT)
+        llm_response = generate_chat(messages)
         action = parse_action() #TODO: implement this to either return json for caldera or None if it's just a regular question
         if action:
             result = self.use_caldera(action)
