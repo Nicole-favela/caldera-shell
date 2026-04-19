@@ -34,7 +34,7 @@ def create_agent():
 			"-v"
 ])
 	except Exception:
-		return "False"
+		return False
 		
 def show_agents():
 	try:
@@ -81,7 +81,7 @@ ATOMIC ORDERING:{adversary['atomic_ordering']}
 PLUGIN:		{adversary['plugin']}
 			""")
 	except Exception:
-		return false
+		return False
 
 # Operations
 def show_operations():
@@ -105,7 +105,7 @@ USE LEARNNING PARSERES:	{operation['use_learning_parsers']}
 SOURCE: 	{operation['source']}
 			""")
 	except Exception:
-		return false
+		return False
 		
 def create_operation():
 	try:
@@ -125,7 +125,7 @@ def create_operation():
 		}	
 		r=requests.post(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, json=Payload ,timeout=7)
 	except Exception:
-		return false:
+		return False
 	
 #Health
 def health_check():
@@ -147,7 +147,5 @@ NAME:		{source['name']}
 ID:		{source['id']}
 			""")
 	except Exception:
-		return false
+		return False
 
-
-get_sources()
