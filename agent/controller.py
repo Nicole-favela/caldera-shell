@@ -38,10 +38,12 @@ class AgentController:
     #         return f"Caldera error: {e}"
     def get_results(self) -> list[dict]:
         operation_ids = []
-        operation_ids = caldera.get_operation_ids()
+        operation_ids = "93c255c3-6ea8-4981-af89-63b6f12ef46f" #caldera.get_operation_ids()
         reports = []
-        for id in operation_ids:
-            reports.append(caldera.get_reports(id))
+        # for id in operation_ids:
+        #     reports.append(caldera.format_report(caldera.get_reports(id)))
+        reports.append(caldera.format_report(caldera.get_reports(operation_ids)))
+        print(operation_ids)
         return reports
 
     def explain_results(self, results: list[dict]) -> str:
@@ -51,6 +53,7 @@ class AgentController:
         prompt = f"Explain these CALDERA results in simple terms for a red team analyst: {json.dumps(results)}"
         explanation = generate_response(prompt)
         return explanation
+    
     def list_agents(self) -> str:
         """
         uses caldera client to list agents and formats as a string
@@ -59,14 +62,26 @@ class AgentController:
         if not agents:
             return "Error retrieving agents."
         return agents
+    
+    def list_adversaries(self) -> str:
+        """
+        Uses caldera client to list adversaries and then formats as a string
+        """
+        adversaries = caldera.show_adversaries()
+        if not adversaries:
+            return "Error retrieving adversaries."
+        return adversaries
+    
     def create_operation(self):
         caldera.create_operation()
+
     def list_operations(self) -> str:
         """
         uses caldera client to list operations as a string
         """
         caldera.show_operations()
         pass
+
     def stop_operation(self, params)-> str:
         """
         stops caldera operation by id and returns a statement telling the user the operation has stopped

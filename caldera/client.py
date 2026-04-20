@@ -110,9 +110,9 @@ SOURCE: 	{operation['source']}
 def create_operation():
 	try:
 		Payload={
-			"name": "test6",
+			"name": "test dom",
 			"adversary" : {
-				"adversary_id": "2346dbbc-9965-4380-bec3-689a291f43b6"
+				"adversary_id": "0f4c3c67-845e-49a0-927e-90ed33c044e0" #"2346dbbc-9965-4380-bec3-689a291f43b6"
 			},
 			"planner": {
 				"id": "aaa7c857-37a0-4c4a-85f7-4e9f7f30e31a"
@@ -161,7 +161,52 @@ def get_operation_ids():
 		return op_ids
 	except Exception:
 		return False
-	
+
+#TODO: Look at output and figure out how to parse relevant data to pass to LLM.
 def get_reports(id):
 	r = requests.get(f"{CALDERA_URL}/api/v2/operations/{id}", headers = HEADERS, timeout=7)
 	return r.json()
+
+def format_report(report):
+	data = report
+	print(data)
+	operation ={
+	# Top level
+        "name": data.get("name"),
+        "start": data.get("start"),
+        "finish": data.get("finish"),
+        "planner": data.get("planner"),
+        "jitter": data.get("jitter"),
+
+        # Nested objects
+        "adversary_name": data.get("adversary", {}).get("name"),
+        "adversary_id": data.get("adversary", {}).get("adversary_id"),
+
+        # Nested in a list
+        "agent_paw": data.get("host_group", [{}])[0].get("paw"),
+        "agent_platform": data.get("host_group", [{}])[0].get("platform"),
+        "agent_host": data.get("host_group", [{}])[0].get("host"),
+
+        # Deeply nested
+        "objective_name": data.get("objectives", {}).get("name"),
+        "objective_desc": data.get("objectives", {}).get("description"),
+
+        # Your existing format_report output
+        "steps": format_steps(data)
+    }
+	# print(operation)
+	return operation
+
+def format_steps(operation: dict) -> list[dict]:
+	formatted_steps = []
+	for paw, agent_data in operation.get("steps", {}).items():
+		print("Printing steps")
+		print(step)
+		for step in agent_data.get("steps", []):
+			formatted_steps.append({
+				"name": step.get("name"),
+				"description": step.get("description"),
+				"command": step.get("command"),
+				"output": step.get("output"),
+			})
+	return formatted_steps
