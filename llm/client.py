@@ -20,7 +20,7 @@ def generate_response(prompt):
         "prompt": prompt,
         "max_tokens": 1000,
         "temperature": 0.2,
-        "stream": 'false'
+        "stream": False
     }
     try:
         response = requests.post(url, json=payload)

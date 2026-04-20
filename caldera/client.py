@@ -164,4 +164,4 @@ def get_operation_ids():
 	
 def get_reports(id):
 	r = requests.get(f"{CALDERA_URL}/api/v2/operations/{id}", headers = HEADERS, timeout=7)
-	print(r.json())
+	return r.json()
