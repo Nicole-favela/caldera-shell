@@ -97,7 +97,7 @@ def handle_menu_pick(pick, agent):
     elif pick == '4':
         return agent.list_operations()
     elif pick == '5': # this should be the only option that uses caldera + llm to explain
-        result =agent.get_results()
+        result = agent.get_results()
         return agent.explain_results(result)
     elif pick == '6':
         return agent.stop_operation()
