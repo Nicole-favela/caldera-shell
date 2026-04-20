@@ -50,7 +50,7 @@ MENU OPTIONS → SYSTEM BEHAVIOR
     → agent.stop_operation()
 
 """
-from caldera.client import health_check, list_agents, list_adversaries
+from caldera.client import health_check, show_agents as list_agents, show_adversaries as list_adversaries
 from agent.controller import AgentController
 BANNER = """
 ╔══════════════════════════════════════════════════╗

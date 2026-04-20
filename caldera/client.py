@@ -124,6 +124,7 @@ def create_operation():
 			}
 		}	
 		r=requests.post(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, json=Payload ,timeout=7)
+		return r.status_code
 	except Exception:
 		return False
 	
@@ -149,3 +150,18 @@ ID:		{source['id']}
 	except Exception:
 		return False
 
+#Helper Functions for Getting Operations Reports
+def get_operation_ids():
+	try:
+		r = requests.get(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, timeout=7)
+		op_ids = []
+		operations=r.json()
+		for operation in operations:
+			op_ids.append(operation['id'])
+		return op_ids
+	except Exception:
+		return False
+	
+def get_reports(id):
+	r = requests.get(f"{CALDERA_URL}/api/v2/operations/{id}", headers = HEADERS, timeout=7)
+	print(r.json())

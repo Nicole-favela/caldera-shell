@@ -20,7 +20,7 @@ class AgentController:
         messages = self.memory.get_messages()
         if context and context != "No active CALDERA session.":
             messages = [{"role": "system", "content": f"Current state: {context}"}]
-        llm_response = generate_chat(messages, system = SYSTEM_PROMPT)
+        llm_response = generate_chat(messages)#, system = SYSTEM_PROMPT)
         #action = parse_action() #TODO: implement this to either return json for caldera or None if it's just a regular question
         
         self.memory.add_assistant(llm_response)
@@ -36,6 +36,14 @@ class AgentController:
             
     #     except Exception as e:
     #         return f"Caldera error: {e}"
+    def get_results(self) -> list[dict]:
+        operation_ids = []
+        operation_ids = caldera.get_operation_ids()
+        reports = []
+        for id in operation_ids:
+            reports.append(caldera.get_reports(id))
+        return reports
+
     def explain_results(self, results: list[dict]) -> str:
         """
         takes in caldera results and uses the llm to explain them to the user in simple terms. 
@@ -51,11 +59,13 @@ class AgentController:
         if not agents:
             return "Error retrieving agents."
         return agents
-        
+    def create_operation(self):
+        caldera.create_operation()
     def list_operations(self) -> str:
         """
         uses caldera client to list operations as a string
         """
+        caldera.show_operations()
         pass
     def stop_operation(self, params)-> str:
         """
