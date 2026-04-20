@@ -12,37 +12,46 @@ class AgentController:
         self.memory = ConversationMemory(max_turns=15)
     def chat(self, user_input):
         """
-        main entry point to take in user input and return a response. Decides whether the user wants to use caldera 
+        Used only for general cybersec questions and for questions about the current operation/agent context.
         or just ask a security question. 
+        handles questions like what does x attack mean or other questions.
         """
         context = self.memory.get_context_summary()
         messages = self.memory.get_messages()
         if context and context != "No active CALDERA session.":
             messages = [{"role": "system", "content": f"Current state: {context}"}]
         llm_response = generate_chat(messages, system = SYSTEM_PROMPT)
-        action = parse_action() #TODO: implement this to either return json for caldera or None if it's just a regular question
-        if action:
-            result = self.use_caldera(action)
-        else: #this is just a regular question
-            result = llm_response
-        self.memory.add_assistant(result)
-        return result
-    def parse_action(self, action: dict) -> str:
-        """
-        TODO: decide on what is needed from the user to logically decide on a caldera call.
-        Helper function to route the user's action request to an actual caldera call.
-        Expects a json string.
-        """
-        try:
-            print(f"Parsing action: {action}")
+        #action = parse_action() #TODO: implement this to either return json for caldera or None if it's just a regular question
+        
+        self.memory.add_assistant(llm_response)
+        return llm_response
+    # def parse_action(self, action: dict) -> str:
+    #     """
+    #     TODO: decide on what is needed from the user to logically decide on a caldera call.
+    #     Helper function to route the user's action request to an actual caldera call.
+    #     Expects a json string.
+    #     """
+    #     try:
+    #         print(f"Parsing action: {action}")
             
-        except Exception as e:
-            return f"Caldera error: {e}"
+    #     except Exception as e:
+    #         return f"Caldera error: {e}"
+    def explain_results(self, results: list[dict]) -> str:
+        """
+        takes in caldera results and uses the llm to explain them to the user in simple terms. 
+        """
+        prompt = f"Explain these CALDERA results in simple terms for a red team analyst: {json.dumps(results)}"
+        explanation = generate_response(prompt)
+        return explanation
     def list_agents(self) -> str:
         """
         uses caldera client to list agents and formats as a string
         """
-        pass
+        agents = caldera.show_agents()
+        if not agents:
+            return "Error retrieving agents."
+        return agents
+        
     def list_operations(self) -> str:
         """
         uses caldera client to list operations as a string
