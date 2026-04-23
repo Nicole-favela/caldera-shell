@@ -54,8 +54,8 @@ from caldera.client import health_check, show_agents as list_agents, show_advers
 from agent.controller import AgentController
 BANNER = """
 ╔══════════════════════════════════════════════════╗
-║   CALDERA AI Red Team Assistant (Llama 3.1)     ║
-║   Commands: 'report', 'clear', 'status', 'quit' ║
+║   CALDERA AI Red Team Assistant (Llama 3.1)      ║
+║   Commands: 'report', 'clear', 'status', 'quit'  ║
 ╚══════════════════════════════════════════════════╝
 Type a number to take a CALDERA action, or just type
 a question in plain English at any time.

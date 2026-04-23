@@ -11,7 +11,7 @@ load_dotenv()
 #for wnen we add these to the env file
 CALDERA_URL = os.getenv("CALDERA_URL", "http://localhost:8888")
 API_KEY     = os.getenv("CALDERA_API_KEY")
-HEADERS     = {"KEY": API_KEY, "Content-Type": "application/json"}
+HEADERS     = {"KEY": API_KEY, "Content-Type": "application/json", "accept": "application/json", "enable_agent_output": "true"}
 # Agents
 def create_agent():
 	url = f"{CALDERA_URL}/file/download"
@@ -164,49 +164,59 @@ def get_operation_ids():
 
 #TODO: Look at output and figure out how to parse relevant data to pass to LLM.
 def get_reports(id):
-	r = requests.get(f"{CALDERA_URL}/api/v2/operations/{id}", headers = HEADERS, timeout=7)
-	return r.json()
+	payload = {"enable_agent_output": "True"} #Gets stdout and stderr details from the report. False omits them.
+	r = requests.post(f"{CALDERA_URL}/api/v2/operations/{id}/report", headers = HEADERS, json=payload, timeout=7)
+	if(r.status_code == 200):
+		return r.json()
+	else:
+		return False
 
-def format_report(report):
-	data = report
-	print(data)
-	operation ={
-	# Top level
-        "name": data.get("name"),
-        "start": data.get("start"),
-        "finish": data.get("finish"),
-        "planner": data.get("planner"),
-        "jitter": data.get("jitter"),
 
-        # Nested objects
-        "adversary_name": data.get("adversary", {}).get("name"),
-        "adversary_id": data.get("adversary", {}).get("adversary_id"),
+def format_report(report: dict) -> dict:
+	try:
+		data = report
+		operation = {
+			"name": data.get("name"),
+			"start": data.get("start"),
+			"finish": data.get("finish"),
+			"planner": data.get("planner"),
+			"adversary_name": data.get("adversary", {}).get("name"),
+			"host_group": format_host_group(data),
+			"steps": format_steps(data),
+		}
+		return operation
+	except Exception:
+		return False
 
-        # Nested in a list
-        "agent_paw": data.get("host_group", [{}])[0].get("paw"),
-        "agent_platform": data.get("host_group", [{}])[0].get("platform"),
-        "agent_host": data.get("host_group", [{}])[0].get("host"),
 
-        # Deeply nested
-        "objective_name": data.get("objectives", {}).get("name"),
-        "objective_desc": data.get("objectives", {}).get("description"),
-
-        # Your existing format_report output
-        "steps": format_steps(data)
-    }
-	# print(operation)
-	return operation
-
-def format_steps(operation: dict) -> list[dict]:
-	formatted_steps = []
-	for paw, agent_data in operation.get("steps", {}).items():
-		print("Printing steps")
-		print(step)
-		for step in agent_data.get("steps", []):
-			formatted_steps.append({
-				"name": step.get("name"),
-				"description": step.get("description"),
-				"command": step.get("command"),
-				"output": step.get("output"),
+def format_host_group(data: dict) -> list[dict]:
+	try:
+		formatted_hosts = []
+		for agent in data.get("host_group", []):
+			formatted_hosts.append({
+				"paw": agent.get("paw"),
+				"location": agent.get("location"),
+				"host_ip_addrs": agent.get("host_ip_addrs", []),
 			})
-	return formatted_steps
+		return formatted_hosts
+	except Exception:
+		return False
+
+
+def format_steps(data: dict) -> list[dict]:
+	try:
+		formatted_steps = []
+		for paw, agent_data in data.get("steps", {}).items():
+			for step in agent_data.get("steps", []):
+				formatted_steps.append({
+					"paw": paw,
+					"command_name": step.get("name"),
+					"command": step.get("plaintext_command"),  # decoded; use "command" for base64
+					"description": step.get("description", "").strip(),
+					"tactic": step.get("attack", {}).get("tactic"),
+					"technique_name": step.get("attack", {}).get("technique_name"),
+					"output": step.get("output")
+				})
+		return formatted_steps
+	except Exception:
+		return False

@@ -38,19 +38,18 @@ class AgentController:
     #         return f"Caldera error: {e}"
     def get_results(self) -> list[dict]:
         operation_ids = []
-        operation_ids = "93c255c3-6ea8-4981-af89-63b6f12ef46f" #caldera.get_operation_ids()
+        operation_ids = caldera.get_operation_ids()
         reports = []
-        # for id in operation_ids:
-        #     reports.append(caldera.format_report(caldera.get_reports(id)))
+        for id in operation_ids:
+            reports.append(caldera.format_report(caldera.get_reports(id)))
         reports.append(caldera.format_report(caldera.get_reports(operation_ids)))
-        print(operation_ids)
         return reports
 
     def explain_results(self, results: list[dict]) -> str:
         """
         takes in caldera results and uses the llm to explain them to the user in simple terms. 
         """
-        prompt = f"Explain these CALDERA results in simple terms for a red team analyst: {json.dumps(results)}"
+        prompt = f"Explain these CALDERA results in simple terms for a red team analyst for the entire report. Do not omit anything: {json.dumps(results)}"
         explanation = generate_response(prompt)
         return explanation
     
