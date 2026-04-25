@@ -46,7 +46,7 @@ class AgentController:
         explanation = generate_response(prompt)
         return explanation
     
-     def list_agents(self) -> str:
+    def list_agents(self) -> str:
         """
         uses caldera client to list agents and formats as a string
         """
@@ -65,6 +65,12 @@ class AgentController:
         full_result =  "\n".join(formatted_lines)
         self.memory.add_assistant(full_result)
         return full_result
+        
+    def get_agent(self)-> str:
+    	agent=caldera.get_agents()
+    	agent_1=agent[0]
+    	self.memory.set_agent(agent_1["paw"])
+
     
     def list_adversaries(self) -> str:
         """
