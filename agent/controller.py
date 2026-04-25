@@ -52,12 +52,12 @@ class AgentController:
         """
         agents = caldera.get_agents()
         for agent in agents:
-        	self.memory.set_agent({agent['paw']})
-       		self.memory.set_agent_host({agent['host']})
-        	self.memory.set_agent_arch({agent['architecture']})
-        	self.memory.set_agent_host_plat({agent['platform']})
-        	self.memory.set_agent_status({agent['status']})
-        	self.memory.set_agent_host_username({agent['username']})
+            self.memory.set_agent({agent['paw']})
+            self.memory.set_agent_host({agent['host']})
+            self.memory.set_agent_arch({agent['architecture']})
+            self.memory.set_agent_host_plat({agent['platform']})
+            self.memory.set_agent_status({agent['status']})
+            self.memory.set_agent_host_username({agent['username']})
         if not agents:
             return "Error retrieving agents."
         return caldera.show_agents()
