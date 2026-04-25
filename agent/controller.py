@@ -50,22 +50,18 @@ class AgentController:
         """
         uses caldera client to list agents and formats as a string
         """
-        #agents = caldera.show_agents()
         agents = caldera.get_agents()
+        for agent in agents:
+        	self.memory.set_agent({agent['paw']})
+       		self.memory.set_agent_host({agent['host']})
+        	self.memory.set_agent_arch({agent['architecture']})
+        	self.memory.set_agent_host_plat({agent['platform']})
+        	self.memory.set_agent_status({agent['status']})
+        	self.memory.set_agent_host_username({agent['username']})
         if not agents:
-            res = "Error retrieving agents."
-            self.memory.add_assistant(res)
-            return res
-
-        top_agent = agents[0]
-        self.memory.set_agent(top_agent["paw"])
-        formatted_lines = ["Active agents:"]
-        for agent in agents: #trim down to just relevant info
-            formatted_lines.append(f"agent paw: {agent.get('paw', '?')}, group: {agent.get('group', '?')}, platform: {agent.get('platform', '?')}, architecture: {agent.get('architecture', '?')},  host: {agent.get('host', '?')}, status: {agent.get('status', '?')}, ip: {agent.get('host_ip_addrs', ['?'])[0]}")
-        full_result =  "\n".join(formatted_lines)
-        self.memory.add_assistant(full_result)
-        return full_result
-
+            return "Error retrieving agents."
+        return caldera.show_agents()
+    
     def list_adversaries(self) -> str:
         """
         Uses caldera client to list adversaries and then formats as a string
@@ -90,7 +86,4 @@ class AgentController:
         stops caldera operation by id and returns a statement telling the user the operation has stopped
         """
         pass
-
-
-
-
+  
