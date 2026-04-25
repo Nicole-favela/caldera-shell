@@ -10,7 +10,7 @@ load_dotenv()
 OLLAMA_API_URL = os.getenv("OLLAMA_API_URL", "http://localhost:11434")
 MODEL_NAME = os.getenv("OLLAMA_MODEL")
 
-def generate_response(prompt):
+def generate_response(prompt: str, system: str = None) -> str:
     '''
     Generate a response from the model using the Ollama API.
     '''
@@ -32,11 +32,13 @@ def generate_response(prompt):
         
     except Exception as e:
         return f"Error on sLLM call: {e}"
-def generate_chat(messages):
+def generate_chat(messages: list[dict],system: str = None) -> str:
     """
     Multi-turn chats with /chat endpoint
 
     """
+    if system:
+        messages = [{"role": "system", "content": system}] + messages
     url = f"{OLLAMA_API_URL}/api/chat"
     payload = {
         "model": MODEL_NAME,

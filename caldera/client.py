@@ -40,7 +40,11 @@ def show_agents():
 	try:
 		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=7)
 		agents=r.json()
-		if agents == []:
+		count=0
+		for agent in agents:
+			if agent['status']=='alive':
+				count+=1
+		if agents == [] or count == 0:
 			return f"There are no agents."
 		print(f"{'PAW':<10} {'PLATFORM':<10} {'ARCHITECTURE':<10} {'HOST':<10} {'USER':<10} {'STATUS':<10} {'IP'}")
 		print ("-" * 100)
