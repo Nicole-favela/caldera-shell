@@ -133,7 +133,7 @@ def main():
         elif user_input in ['1', '2', '3', '4', '5', '6']: #TODO: add llm involvement for 3 and 5. might need to separate these out
             print(f"  Processing CALDERA action {user_input}...\n") 
             response = handle_menu_pick(user_input, agent)
-            print(f"\n{response}")
+            print(f"\nAgent: {response}")
             continue
         else:
             print("  Processing your question...\n")

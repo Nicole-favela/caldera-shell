@@ -40,10 +40,22 @@ def show_agents():
 	try:
 		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=7)
 		agents=r.json()
-		print(f"{'PAW':<10} {'GROUP':<10} {'PLATFORM':<10}  {'ARCHITECTURE':<10} {'TRUSTED':<10} {'HOST':<10} {'USER':<10} {'STATUS':<10} {'IP'}")
+		if agents == []:
+			return f"There are no agents."
+		print(f"{'PAW':<10} {'PLATFORM':<10} {'ARCHITECTURE':<10} {'HOST':<10} {'USER':<10} {'STATUS':<10} {'IP'}")
 		print ("-" * 100)
 		for agent in agents:
-			print(f"{agent['paw']:<10} {agent['group']:<10} {agent['platform']:<10} {agent['architecture']:<10} {agent['trusted']:<10} {agent['host']:<10} {agent['username']:<10} {agent['status']:<10} {agent['host_ip_addrs'][0]}")
+			if agent['status']=='alive':
+				print(f"{agent['paw']:<10} {agent['platform']:<10} {agent['architecture']:<10} {agent['host']:<10} {agent['username']:<10} {agent['status']:<10} {agent['host_ip_addrs'][0]}")
+		return f"All connected agents displayed"
+	except Exception:
+		return f"No agents to show"
+
+def get_agents():
+	try:
+		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=7)
+		agents=r.json()
+		return agents
 	except Exception:
 		return False
 
@@ -77,8 +89,6 @@ def show_adversaries():
 NAME:		{adversary['name']}
 DESCRIPTION: 	{adversary['description']}
 ADVERSARY ID: 	{adversary['adversary_id']}
-ATOMIC ORDERING:{adversary['atomic_ordering']}
-PLUGIN:		{adversary['plugin']}
 			""")
 	except Exception:
 		return False
@@ -220,3 +230,4 @@ def format_steps(data: dict) -> list[dict]:
 		return formatted_steps
 	except Exception:
 		return False
+		
