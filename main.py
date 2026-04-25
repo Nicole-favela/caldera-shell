@@ -31,10 +31,9 @@ MENU OPTIONS → SYSTEM BEHAVIOR
 
 [3] Run an operation
     → agent.create_operation()
-    → Guided selection:
-        - Choose agent (target machine)
-        - Choose adversary (attack plan)
-    → Launches red team operation
+    Note: the user can only run the scanning operation name:<addname>
+
+
 
 [4] Check operation status
     → agent.list_operations()
@@ -50,8 +49,7 @@ MENU OPTIONS → SYSTEM BEHAVIOR
     → agent.stop_operation()
 
 """
-from caldera.client import health_check, show_agents as list_agents, show_adversaries as list_adversaries
-from agent.controller import AgentController
+
 BANNER = """
 ╔══════════════════════════════════════════════════╗
 ║   CALDERA AI Red Team Assistant (Llama 3.1)      ║
@@ -73,6 +71,7 @@ MENU = """
   report  — generate full report from results
   clear   — reset memory
   quit    — exit
+  help    — show the menu options again
 ──────────────────────────────────────────────
 """
 HELP_MENU = """ 
@@ -81,6 +80,9 @@ HELP_MENU = """
     - Lists all agents currently connected to CALDERA, along with details like their platform, host, and status.
 
 """ #TODO: ADD DETAILED EXPLANATIONS OF EACH ITEM/OPTION FOR THAT THE USER CAN SELECT. 
+from caldera.client import health_check, show_agents as list_agents, show_adversaries as list_adversaries
+from agent.controller import AgentController
+import asyncio
 def print_menu():
     print(MENU)
 def print_help():
@@ -102,7 +104,7 @@ def handle_menu_pick(pick, agent):
     elif pick == '6':
         return agent.stop_operation()
 
-def main():
+async def async_main():
     print(BANNER)
    
     if not health_check():
@@ -130,10 +132,14 @@ def main():
         elif user_input.lower() == "report":
             print(f" Generating report from last operation results...\n") #todo: implement report
             continue
+        elif user_input.lower() == "help":
+            print_menu()
+            continue
         elif user_input in ['1', '2', '3', '4', '5', '6']: #TODO: add llm involvement for 3 and 5. might need to separate these out
             print(f"  Processing CALDERA action {user_input}...\n") 
             response = handle_menu_pick(user_input, agent)
             print(f"\n{response}")
+            print_menu()
             continue
         else:
             print("  Processing your question...\n")
@@ -141,4 +147,4 @@ def main():
             print(f"\nAgent: {response}")
             continue
 if __name__ == "__main__":
-    main()
+    asyncio.run(async_main())

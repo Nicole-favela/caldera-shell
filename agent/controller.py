@@ -17,25 +17,17 @@ class AgentController:
         handles questions like what does x attack mean or other questions.
         """
         context = self.memory.get_context_summary()
-        messages = self.memory.get_messages()
-        if context and context != "No active CALDERA session.":
+        messages = self.memory.get_messages() #user convo history
+        if context or messages:
             messages = [{"role": "system", "content": f"Current state: {context}"}]
-        llm_response = generate_chat(messages)#, system = SYSTEM_PROMPT)
+            messages += self.memory.get_messages()
+            messages.append({"role": "user", "content": user_input})
+        llm_response = generate_chat(messages, system=SYSTEM_PROMPT)#, system = SYSTEM_PROMPT)
         #action = parse_action() #TODO: implement this to either return json for caldera or None if it's just a regular question
         
         self.memory.add_assistant(llm_response)
         return llm_response
-    # def parse_action(self, action: dict) -> str:
-    #     """
-    #     TODO: decide on what is needed from the user to logically decide on a caldera call.
-    #     Helper function to route the user's action request to an actual caldera call.
-    #     Expects a json string.
-    #     """
-    #     try:
-    #         print(f"Parsing action: {action}")
-            
-    #     except Exception as e:
-    #         return f"Caldera error: {e}"
+    
     def get_results(self) -> list[dict]:
         operation_ids = []
         operation_ids = caldera.get_operation_ids()
