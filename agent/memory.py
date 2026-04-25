@@ -8,7 +8,7 @@ class ConversationMemory:
 
     def __init__(self, max_turns=15):
         self.history: deque[dict] = deque(maxlen=max_turns * 2)  # user+assistant pairs
-        self.caldera_context: dict = {"op_id":None, "agent_paw": None, "op_name": None} #TODO: decide on what this should contain!
+        self.caldera_context: dict = {"op_id":None, "agent_paw": None, "op_name": None} #this should be the important details for caldera
     #for formatting user and assistant messages for ollama
     def add_user(self, message: str):
         self.history.append({"role": "user", "content": message})

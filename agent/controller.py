@@ -16,12 +16,13 @@ class AgentController:
         or just ask a security question. 
         handles questions like what does x attack mean or other questions.
         """
+        self.memory.add_user(user_input) #store first message
         context = self.memory.get_context_summary()
         messages = self.memory.get_messages() #user convo history
         if context or messages:
             messages = [{"role": "system", "content": f"Current state: {context}"}]
             messages += self.memory.get_messages()
-            messages.append({"role": "user", "content": user_input})
+            # messages.append({"role": "user", "content": user_input})
         llm_response = generate_chat(messages, system=SYSTEM_PROMPT)#, system = SYSTEM_PROMPT)
         #action = parse_action() #TODO: implement this to either return json for caldera or None if it's just a regular question
         
@@ -49,11 +50,22 @@ class AgentController:
         """
         uses caldera client to list agents and formats as a string
         """
-        agents = caldera.show_agents()
+        #agents = caldera.show_agents()
+        agents = caldera.get_agents()
         if not agents:
-            return "Error retrieving agents."
-        return agents
-    
+            res = "Error retrieving agents."
+            self.memory.add_assistant(res)
+            return res
+
+        top_agent = agents[0]
+        self.memory.set_agent(top_agent["paw"])
+        formatted_lines = ["Active agents:"]
+        for agent in agents: #trim down to just relevant info
+            formatted_lines.append(f"agent paw: {agent.get('paw', '?')}, group: {agent.get('group', '?')}, platform: {agent.get('platform', '?')}, architecture: {agent.get('architecture', '?')},  host: {agent.get('host', '?')}, status: {agent.get('status', '?')}, ip: {agent.get('host_ip_addrs', ['?'])[0]}")
+        full_result =  "\n".join(formatted_lines)
+        self.memory.add_assistant(full_result)
+        return full_result
+
     def list_adversaries(self) -> str:
         """
         Uses caldera client to list adversaries and then formats as a string

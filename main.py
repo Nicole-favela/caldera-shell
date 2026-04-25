@@ -121,7 +121,7 @@ async def async_main():
             continue
         elif user_input.lower() == 'quit' or user_input.lower() == 'q':
             break
-        elif user_input.lower == "clear":
+        elif user_input.lower() == "clear":
             agent.memory.clear()
             print("  Memory cleared.\n")
             print_menu()

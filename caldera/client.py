@@ -46,6 +46,12 @@ def show_agents():
 			print(f"{agent['paw']:<10} {agent['group']:<10} {agent['platform']:<10} {agent['architecture']:<10} {agent['trusted']:<10} {agent['host']:<10} {agent['username']:<10} {agent['status']:<10} {agent['host_ip_addrs'][0]}")
 	except Exception:
 		return False
+def get_agents():
+	try:
+		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=14)
+		return r.json()
+	except Exception:
+		return False
 
 # Abilities
 def show_abilities():
