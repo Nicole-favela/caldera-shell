@@ -16,53 +16,74 @@ class AgentController:
         or just ask a security question. 
         handles questions like what does x attack mean or other questions.
         """
+        self.memory.add_user(user_input) #store first message
         context = self.memory.get_context_summary()
-        messages = self.memory.get_messages()
-        if context and context != "No active CALDERA session.":
+        messages = self.memory.get_messages() #user convo history
+        if context or messages:
             messages = [{"role": "system", "content": f"Current state: {context}"}]
-        llm_response = generate_chat(messages, system = SYSTEM_PROMPT)
+            messages += self.memory.get_messages()
+            # messages.append({"role": "user", "content": user_input})
+        llm_response = generate_chat(messages, system=SYSTEM_PROMPT)#, system = SYSTEM_PROMPT)
         #action = parse_action() #TODO: implement this to either return json for caldera or None if it's just a regular question
         
         self.memory.add_assistant(llm_response)
         return llm_response
-    # def parse_action(self, action: dict) -> str:
-    #     """
-    #     TODO: decide on what is needed from the user to logically decide on a caldera call.
-    #     Helper function to route the user's action request to an actual caldera call.
-    #     Expects a json string.
-    #     """
-    #     try:
-    #         print(f"Parsing action: {action}")
-            
-    #     except Exception as e:
-    #         return f"Caldera error: {e}"
+    
+    def get_results(self) -> list[dict]:
+        operation_ids = []
+        operation_ids = caldera.get_operation_ids()
+        reports = []
+        for id in operation_ids:
+            reports.append(caldera.format_report(caldera.get_reports(id)))
+        reports.append(caldera.format_report(caldera.get_reports(operation_ids)))
+        return reports
+
     def explain_results(self, results: list[dict]) -> str:
         """
         takes in caldera results and uses the llm to explain them to the user in simple terms. 
         """
-        prompt = f"Explain these CALDERA results in simple terms for a red team analyst: {json.dumps(results)}"
+        prompt = f"Explain these CALDERA results in simple terms for a red team analyst for the entire report. Do not omit anything: {json.dumps(results)}"
         explanation = generate_response(prompt)
         return explanation
+    
     def list_agents(self) -> str:
         """
         uses caldera client to list agents and formats as a string
         """
-        agents = caldera.show_agents()
+        agents = caldera.get_agents()
+        for agent in agents:
+            self.memory.set_agent({agent['paw']})
+            self.memory.set_agent_host({agent['host']})
+            self.memory.set_agent_arch({agent['architecture']})
+            self.memory.set_agent_host_plat({agent['platform']})
+            self.memory.set_agent_status({agent['status']})
+            self.memory.set_agent_host_username({agent['username']})
         if not agents:
             return "Error retrieving agents."
-        return agents
-        
+        return caldera.show_agents()
+    
+    def list_adversaries(self) -> str:
+        """
+        Uses caldera client to list adversaries and then formats as a string
+        """
+        adversaries = caldera.show_adversaries()
+        if not adversaries:
+            return "Error retrieving adversaries."
+        return adversaries
+    
+    def create_operation(self):
+        caldera.create_operation()
+
     def list_operations(self) -> str:
         """
         uses caldera client to list operations as a string
         """
+        caldera.show_operations()
         pass
+
     def stop_operation(self, params)-> str:
         """
         stops caldera operation by id and returns a statement telling the user the operation has stopped
         """
         pass
-
-
-
-
+  
