@@ -62,13 +62,6 @@ def show_agents():
 
 def get_agents():
 	try:
-		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=7)
-		agents=r.json()
-		return agents
-	except Exception:
-		return False
-def get_agents():
-	try:
 		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=14)
 		return r.json()
 	except Exception:
