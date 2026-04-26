@@ -17,7 +17,7 @@ def generate_response(prompt: str, system: str = None) -> str:
     url = f"{OLLAMA_API_URL}/api/generate"
     payload = {
         "model": MODEL_NAME,
-        "prompt": prompt,
+        "prompt": prompt, 
         "max_tokens": 1000,
         "temperature": 0.2,
         "stream": False

@@ -21,6 +21,8 @@ class ConversationMemory:
     #sets caldera paw agent identifier
     def set_agent(self, paw: str):
         self.caldera_context["agent_paw"] = paw
+    def set_operation(self, op_id: str):
+    	self.caldera_context["op_id"]=op_id
 
     def set_last_results(self, results: list[dict]):
         self.caldera_context["last_results"] = results
@@ -30,7 +32,8 @@ class ConversationMemory:
         if caldera_context["agent_paw"]:
             info.append(f"Current agent: {caldera_context['agent_paw']}")
         if caldera_context["op_name"]:
-            info.append(f"Current operation: {caldera_context['op_name']}, ID: {caldera_context['op_id']}")
+            info.append(f"Current operation: {caldera_context['op_name']}, ID: {caldera_context['operation_id']}")
+        
         return ", ".join(info) if info else "No active CALDERA session."
     def clear(self):
         self.history.clear()

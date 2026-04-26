@@ -41,6 +41,34 @@ def create_agent():
 	except Exception:
 		return False
 		
+def create_agent2():
+	url = f"{CALDERA_URL}/file/download"
+	headers={
+		"file":"sandcat.go",
+		"platform":"linux"
+}
+	try:
+		with requests.post(url,headers=headers,stream=True) as response:
+			response.raise_for_status()
+			with open ("test", "wb") as f:
+				for chunk in response.iter_content(chunk_size=8192):
+					if chunk:
+						f.write(chunk)
+		os.chmod("test",0o755)
+		with open("agent2.log", "wb") as log:
+    			subprocess.Popen(
+        		[
+            			"./test",
+            			"-server", CALDERA_URL,
+            			"-group", "red",
+            			"-v"
+        		],
+        		stdout=log,
+        		stderr=log
+    		)
+	except Exception:
+		return False
+		
 def show_agents():
 	try:
 		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=7)
@@ -67,12 +95,7 @@ def get_agents():
 		return agents
 	except Exception:
 		return False
-def get_agents():
-	try:
-		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=14)
-		return r.json()
-	except Exception:
-		return False
+
 
 # Abilities
 def show_abilities():
@@ -107,6 +130,7 @@ ADVERSARY ID: 	{adversary['adversary_id']}
 			""")
 	except Exception:
 		return False
+		
 
 # Operations
 def show_operations():
@@ -119,23 +143,15 @@ def show_operations():
 NAME:		{operation['name']}
 ID:		{operation['id']}
 ADVERSARY: 	{operation['adversary']}
-JITTER:		{operation['jitter']}
-PLANNER:	{operation['planner']}
 STATE:		{operation['state']}
-OBFUSCATOR: 	{operation['obfuscator']}
-AUTONOMOUS:	{operation['autonomous']}
-AUTO-CLOSE:	{operation['auto_close']}
-OBJECTIVE:	{operation['objective']}
-USE LEARNNING PARSERES:	{operation['use_learning_parsers']}
-SOURCE: 	{operation['source']}
 			""")
 	except Exception:
 		return False
 		
-def create_operation():
+def create_operation(name):
 	try:
 		Payload={
-			"name": "test dom",
+			"name": str(name),
 			"adversary" : {
 				"adversary_id": "0f4c3c67-845e-49a0-927e-90ed33c044e0" #"2346dbbc-9965-4380-bec3-689a291f43b6"
 			},
@@ -152,7 +168,16 @@ def create_operation():
 		return r.status_code
 	except Exception:
 		return False
-	
+		
+def find_operation(name):
+	try:
+		r = requests.get(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, timeout=7)
+		operations=r.json()
+		for operation in operations:
+			if operation['name']==name:
+				return operation['id']
+	except Exception:
+		return False
 #Health
 def health_check():
     try:
@@ -247,4 +272,4 @@ def format_steps(data: dict) -> list[dict]:
 		return False
 
 
-create_agent()
+

@@ -1,6 +1,7 @@
 '''
 orchestrates communication between agent and caldera
 '''
+
 import json
 from llm.client import generate_response, generate_chat
 from caldera import client as caldera
@@ -81,8 +82,12 @@ class AgentController:
             return "Error retrieving adversaries."
         return adversaries
     
-    def create_operation(self):
-        caldera.create_operation()
+    def create_operation(self,name="test"):
+        caldera.create_operation(name)
+        op_id=caldera.find_operation(name)
+        print(op_id)
+        self.memory.set_operation(op_id)
+        
 
     def list_operations(self) -> str:
         """
