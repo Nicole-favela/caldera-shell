@@ -81,8 +81,9 @@ HELP_MENU = """
     - Lists all agents currently connected to CALDERA, along with details like their platform, host, and status.
 
 """ #TODO: ADD DETAILED EXPLANATIONS OF EACH ITEM/OPTION FOR THAT THE USER CAN SELECT. 
-from caldera.client import health_check, show_agents as list_agents, show_adversaries as list_adversaries
+from caldera.client import health_check, show_agents as list_agents, show_adversaries as list_adversaries, create_agent
 from agent.controller import AgentController
+import time
 import asyncio
 def print_menu():
     print(MENU)
@@ -110,7 +111,11 @@ async def async_main():
    
     if not health_check():
         print('Warning cannot reach caldera... defaulting to simple AI agent')
+    create_agent()
+    time.sleep(1.5)
     agent = AgentController()
+    agent.get_agent()
+    response=agent.chat(agent.get_agent())
     print_menu()
     while True:
         try:
