@@ -28,7 +28,7 @@ def create_agent():
 						f.write(chunk)
 		os.chmod("splunkd",0o755)
 		with open("agent.log", "wb") as log:
-    			subprocess.Popen(
+			subprocess.Popen(
         		[
             			"./splunkd",
             			"-server", CALDERA_URL,
@@ -37,7 +37,7 @@ def create_agent():
         		],
         		stdout=log,
         		stderr=log
-    		)
+			)
 	except Exception:
 		return False
 		
@@ -60,13 +60,6 @@ def show_agents():
 	except Exception:
 		return f"No agents to show"
 
-def get_agents():
-	try:
-		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=7)
-		agents=r.json()
-		return agents
-	except Exception:
-		return False
 def get_agents():
 	try:
 		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=14)
@@ -148,11 +141,10 @@ def create_operation():
 				"id": "ed32b9c3-9593-4c33-b0db-e2007315096b"
 			}
 		}	
-		r=requests.post(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, json=Payload ,timeout=7)
+		r=requests.post(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, json=Payload ,timeout=14)
 		return r.status_code
 	except Exception:
 		return False
-	
 #Health
 def health_check():
     try:
@@ -248,3 +240,4 @@ def format_steps(data: dict) -> list[dict]:
 
 
 create_agent()
+create_operation()

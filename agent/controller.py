@@ -68,8 +68,8 @@ class AgentController:
         
     def get_agent(self)-> str:
     	agent=caldera.get_agents()
-    	agent_1=agent[0]
-    	self.memory.set_agent(agent_1["paw"])
+        agent_1=agent[0]
+        self.memory.set_agent(agent_1["paw"])
 
     
     def list_adversaries(self) -> str:
