@@ -102,6 +102,8 @@ async def async_main():
     agent.get_agent()
     response=agent.chat(agent.get_agent())
     print_menu()
+    report_name=""
+    op_id=""
     while True:
         try:
             user_input = input("You: ").strip()
@@ -121,7 +123,12 @@ async def async_main():
             print(f"  {agent.memory.get_context_summary()}\n")
             continue
         elif user_input.lower() == "report":
-            print(f" Generating report from last operation results...\n") #todo: implement report
+            if report_name==""
+            	print(f" No report currently please enter operation name.")
+            else:
+            	if find_operation(report_name) == op_id
+            		print(f" Generating report results...\n") #todo: implement report
+            		agent.get_operation(op_id)
             continue
         elif user_input.lower() == "help":
             print_menu()
@@ -140,7 +147,7 @@ async def async_main():
             	print("creating agent")
             elif "Creating Operation" in response:
             	name=str(user_input).split()
-            	agent.create_operation(name[-1])
+            	op_id=agent.create_operation(name[-1])
             print(f"\nAgent: {response}")
             continue
 if __name__ == "__main__":
