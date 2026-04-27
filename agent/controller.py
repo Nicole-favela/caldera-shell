@@ -90,12 +90,13 @@ class AgentController:
         self.memory.add_assistant(op_id)
         return op_id
 
-    def list_operations(self) -> str:
+    def list_operations(self)-> str:
         """
         uses caldera client to list operations as a string
         """
         caldera.show_operations()
-        pass
+        return "Operations found"
+        
 
     def get_operation(self, op_id)-> str:
         """
