@@ -72,7 +72,6 @@ class AgentController:
         agent_1=agent[0]
         self.memory.set_agent(agent_1["paw"])
 
-    
     def list_adversaries(self) -> str:
         """
         Uses caldera client to list adversaries and then formats as a string
@@ -95,8 +94,7 @@ class AgentController:
         uses caldera client to list operations as a string
         """
         caldera.show_operations()
-        return "Operations found"
-        
+        return("Operations found shown above")
 
     def get_operation(self, op_id)-> str:
         """

