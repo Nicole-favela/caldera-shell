@@ -101,6 +101,26 @@ ADVERSARY ID: 	{adversary['adversary_id']}
 	except Exception:
 		return False
 
+def create_operation():
+	try:
+		Payload={
+			"name": "test dom",
+			"adversary" : {
+				"adversary_id": "0f4c3c67-845e-49a0-927e-90ed33c044e0" #"2346dbbc-9965-4380-bec3-689a291f43b6"
+			},
+			"planner": {
+				"id": "aaa7c857-37a0-4c4a-85f7-4e9f7f30e31a"
+			},
+			"autonomous":1,
+			"auto_close": False,
+			"source": {
+				"id": "ed32b9c3-9593-4c33-b0db-e2007315096b"
+			}
+		}	
+		r=requests.post(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, json=Payload ,timeout=14)
+		return r.status_code
+	except Exception:
+		return False
 # Operations
 def show_operations():
 	try:
@@ -122,27 +142,6 @@ OBJECTIVE:	{operation['objective']}
 USE LEARNNING PARSERES:	{operation['use_learning_parsers']}
 SOURCE: 	{operation['source']}
 			""")
-	except Exception:
-		return False
-		
-def create_operation():
-	try:
-		Payload={
-			"name": "test dom",
-			"adversary" : {
-				"adversary_id": "0f4c3c67-845e-49a0-927e-90ed33c044e0" #"2346dbbc-9965-4380-bec3-689a291f43b6"
-			},
-			"planner": {
-				"id": "aaa7c857-37a0-4c4a-85f7-4e9f7f30e31a"
-			},
-			"autonomous":1,
-			"auto_close": False,
-			"source": {
-				"id": "ed32b9c3-9593-4c33-b0db-e2007315096b"
-			}
-		}	
-		r=requests.post(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, json=Payload ,timeout=14)
-		return r.status_code
 	except Exception:
 		return False
 #Health
