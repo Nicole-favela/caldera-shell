@@ -103,5 +103,6 @@ class AgentController:
         """
         report=caldera.get_reports(op_id)
         formated_report=caldera.format_report(report)
+        print(formated_Report)
         pass
   
