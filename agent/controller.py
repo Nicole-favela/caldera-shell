@@ -87,6 +87,7 @@ class AgentController:
         op_id=caldera.find_operation(name)
         print(op_id)
         self.memory.set_operation(op_id)
+        self.memory.add_assistant(op_id)
         
 
     def list_operations(self) -> str:

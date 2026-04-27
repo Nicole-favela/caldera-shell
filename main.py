@@ -29,24 +29,16 @@ MENU OPTIONS → SYSTEM BEHAVIOR
     → agent.list_adversaries()
     → Returns predefined attack profiles (MITRE ATT&CK)
 
-[3] Run an operation
-    → agent.create_operation()
-    Note: the user can only run the scanning operation name:<addname>
-
-
-
-[4] Check operation status
+[3] Check operation status
     → agent.list_operations()
     → Displays running/completed operations
 
-[5] Get & explain operation results
+[4] Get & explain operation results
     → agent.get_results(raw=True) which is just a caldera api call to get results in raw form
     → agent.explain_results(results)
     → Pipeline:
         CALDERA → raw data → LLM explanation
 
-[6] Stop current operation
-    → agent.stop_operation()
 
 """
 
