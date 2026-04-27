@@ -94,7 +94,7 @@ class AgentController:
         uses caldera client to list operations as a string
         """
         caldera.show_operations()
-        pass
+        return("Operations found shown above")
 
     def get_operation(self, op_id)-> str:
         """
