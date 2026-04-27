@@ -1969,3 +1969,23 @@ available data encoders=base64, plain-text
 [+] Beacon (HTTP): ALIVE
 [+] Beacon (HTTP): ALIVE
 [+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction 0d671e78-19b9-485f-89a5-c13bfcd3b516
+[*] Submitting results for link 0d671e78-19b9-485f-89a5-c13bfcd3b516 via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction f15ddfbe-78fb-4267-a525-8a5f6c463ec9
+[*] Submitting results for link f15ddfbe-78fb-4267-a525-8a5f6c463ec9 via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction 1ae00eeb-3215-4cee-b3c1-4fe5e85b1a94
+[*] Submitting results for link 1ae00eeb-3215-4cee-b3c1-4fe5e85b1a94 via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction 0e592262-0e90-4e30-9b05-e447d267a999
+[*] Submitting results for link 0e592262-0e90-4e30-9b05-e447d267a999 via C2 channel HTTP
+[+] Beacon (HTTP): ALIVE
+[*] Running instruction c1bae78b-dc34-440c-a687-220525978621
+[*] Submitting results for link c1bae78b-dc34-440c-a687-220525978621 via C2 channel HTTP
+[*] Running instruction c7a11f2e-10d0-4876-af34-f9996e52d03a
+[*] Submitting results for link c7a11f2e-10d0-4876-af34-f9996e52d03a via C2 channel HTTP
