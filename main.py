@@ -29,24 +29,16 @@ MENU OPTIONS → SYSTEM BEHAVIOR
     → agent.list_adversaries()
     → Returns predefined attack profiles (MITRE ATT&CK)
 
-[3] Run an operation
-    → agent.create_operation()
-    Note: the user can only run the scanning operation name:<addname>
-
-
-
-[4] Check operation status
+[3] Check operation status
     → agent.list_operations()
     → Displays running/completed operations
 
-[5] Get & explain operation results
+[4] Get & explain operation results
     → agent.get_results(raw=True) which is just a caldera api call to get results in raw form
     → agent.explain_results(results)
     → Pipeline:
         CALDERA → raw data → LLM explanation
 
-[6] Stop current operation
-    → agent.stop_operation()
 
 """
 
@@ -62,10 +54,8 @@ MENU = """
 ─── CALDERA Actions ──────────────────────────
   1. Show connected agents
   2. List available adversaries
-  3. Run an operation
-  4. Check operation status
-  5. Get & explain operation results
-  6. Stop current operation
+  3. Check operation status
+  4. Get & explain operation results
 ─── Other ────────────────────────────────────
   status  — show active agent / operation
   report  — generate full report from results
@@ -80,7 +70,7 @@ HELP_MENU = """
     - Lists all agents currently connected to CALDERA, along with details like their platform, host, and status.
 
 """ #TODO: ADD DETAILED EXPLANATIONS OF EACH ITEM/OPTION FOR THAT THE USER CAN SELECT. 
-from caldera.client import health_check, show_agents as list_agents, show_adversaries as list_adversaries, create_agent
+from caldera.client import health_check, show_agents as list_agents, show_adversaries as list_adversaries, create_agent,create_agent2, create_operation, find_operation
 from agent.controller import AgentController
 import time
 import asyncio
@@ -95,15 +85,11 @@ def handle_menu_pick(pick, agent):
         return agent.list_agents()
     elif pick == '2':
         return agent.list_adversaries()
-    elif pick == '3': #we can add sub options here like what operation would you like etc. and have predefined list
-        return agent.create_operation()
-    elif pick == '4':
+    elif pick == '3':
         return agent.list_operations()
-    elif pick == '5': # this should be the only option that uses caldera + llm to explain
+    elif pick == '4': # this should be the only option that uses caldera + llm to explain
         result = agent.get_results()
         return agent.explain_results(result)
-    elif pick == '6':
-        return agent.stop_operation()
 
 async def async_main():
     print(BANNER)
@@ -116,6 +102,8 @@ async def async_main():
     agent.get_agent()
     response=agent.chat(agent.get_agent())
     print_menu()
+    report_name=""
+    op_id=""
     while True:
         try:
             user_input = input("You: ").strip()
@@ -134,13 +122,18 @@ async def async_main():
         elif user_input.lower() == "status":
             print(f"  {agent.memory.get_context_summary()}\n")
             continue
-        elif user_input.lower() == "report":
-            print(f" Generating report from last operation results...\n") #todo: implement report
+        elif user_input.lower() == "report {report_name}":
+            if report_name=="":
+                print(f" No report currently please enter operation name.")
+            else:
+                if find_operation(report_name) == op_id:
+                    print(f" Generating report results...\n") #todo: implement report
+                    agent.get_operation(op_id)
             continue
         elif user_input.lower() == "help":
             print_menu()
             continue
-        elif user_input in ['1', '2', '3', '4', '5', '6']: #TODO: add llm involvement for 3 and 5. might need to separate these out
+        elif user_input in ['1', '2', '3', '4']: #TODO: add llm involvement for 3 and 5. might need to separate these out
             print(f"  Processing CALDERA action {user_input}...\n") 
             response = handle_menu_pick(user_input, agent)
             print(f"\n{response}")
@@ -149,6 +142,12 @@ async def async_main():
         else:
             print("  Processing your question...\n")
             response = agent.chat(user_input)
+            if "create_agent" in response:
+                create_agent2()
+                print("creating agent")
+            elif "Creating Operation" in response:
+                name=str(user_input).split()
+                op_id=agent.create_operation(name[-1])
             print(f"\nAgent: {response}")
             continue
 if __name__ == "__main__":
