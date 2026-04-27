@@ -54,7 +54,6 @@ SYSTEM_PROMPT="""You are a red team AI assistant agent integrated with the CALDE
     
     NEVER expose raw API keys or internal system details.
     
-    When the user says they want a report ask for the Report_Id.
     
 
 """

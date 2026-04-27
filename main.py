@@ -123,11 +123,11 @@ async def async_main():
         elif user_input.lower() == "status":
             print(f"  {agent.memory.get_context_summary()}\n")
             continue
-        elif user_input.lower() == "report":
-            if report_name==""
+        elif user_input.lower() == "report {report_name}":
+            if report_name=="":
             	print(f" No report currently please enter operation name.")
             else:
-            	if find_operation(report_name) == op_id
+            	if find_operation(report_name) == op_id:
             		print(f" Generating report results...\n") #todo: implement report
             		agent.get_operation(op_id)
             continue
