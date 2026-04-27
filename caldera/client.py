@@ -41,6 +41,34 @@ def create_agent():
 	except Exception:
 		return False
 		
+def create_agent2():
+	url = f"{CALDERA_URL}/file/download"
+	headers={
+		"file":"sandcat.go",
+		"platform":"linux"
+}
+	try:
+		with requests.post(url,headers=headers,stream=True) as response:
+			response.raise_for_status()
+			with open ("test", "wb") as f:
+				for chunk in response.iter_content(chunk_size=8192):
+					if chunk:
+						f.write(chunk)
+		os.chmod("test",0o755)
+		with open("agent2.log", "wb") as log:
+    			subprocess.Popen(
+        		[
+            			"./test",
+            			"-server", CALDERA_URL,
+            			"-group", "red",
+            			"-v"
+        		],
+        		stdout=log,
+        		stderr=log
+    		)
+	except Exception:
+		return False
+		
 def show_agents():
 	try:
 		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=7)
@@ -62,10 +90,19 @@ def show_agents():
 
 def get_agents():
 	try:
+<<<<<<< HEAD
 		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=14)
 		return r.json()
 	except Exception:
 		return False
+=======
+		r = requests.get(f"{CALDERA_URL}/api/v2/agents", headers = HEADERS, timeout=7)
+		agents=r.json()
+		return agents
+	except Exception:
+		return False
+
+>>>>>>> origin/fernie
 
 # Abilities
 def show_abilities():
@@ -100,6 +137,7 @@ ADVERSARY ID: 	{adversary['adversary_id']}
 			""")
 	except Exception:
 		return False
+		
 
 def create_operation():
 	try:
@@ -132,18 +170,44 @@ def show_operations():
 NAME:		{operation['name']}
 ID:		{operation['id']}
 ADVERSARY: 	{operation['adversary']}
-JITTER:		{operation['jitter']}
-PLANNER:	{operation['planner']}
 STATE:		{operation['state']}
-OBFUSCATOR: 	{operation['obfuscator']}
-AUTONOMOUS:	{operation['autonomous']}
-AUTO-CLOSE:	{operation['auto_close']}
-OBJECTIVE:	{operation['objective']}
-USE LEARNNING PARSERES:	{operation['use_learning_parsers']}
-SOURCE: 	{operation['source']}
 			""")
 	except Exception:
 		return False
+<<<<<<< HEAD
+=======
+		
+def create_operation(name):
+	try:
+		Payload={
+			"name": str(name),
+			"adversary" : {
+				"adversary_id": "0f4c3c67-845e-49a0-927e-90ed33c044e0" #"2346dbbc-9965-4380-bec3-689a291f43b6"
+			},
+			"planner": {
+				"id": "aaa7c857-37a0-4c4a-85f7-4e9f7f30e31a"
+			},
+			"autonomous":1,
+			"auto_close": False,
+			"source": {
+				"id": "ed32b9c3-9593-4c33-b0db-e2007315096b"
+			}
+		}	
+		r=requests.post(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, json=Payload ,timeout=7)
+		return r.status_code
+	except Exception:
+		return False
+		
+def find_operation(name):
+	try:
+		r = requests.get(f"{CALDERA_URL}/api/v2/operations", headers = HEADERS, timeout=7)
+		operations=r.json()
+		for operation in operations:
+			if operation['name']==name:
+				return operation['id']
+	except Exception:
+		return False
+>>>>>>> origin/fernie
 #Health
 def health_check():
     try:
@@ -238,5 +302,9 @@ def format_steps(data: dict) -> list[dict]:
 		return False
 
 
+<<<<<<< HEAD
 create_agent()
 create_operation()
+=======
+
+>>>>>>> origin/fernie
