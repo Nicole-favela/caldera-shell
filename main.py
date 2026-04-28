@@ -132,7 +132,7 @@ async def async_main():
         elif user_input.lower() == "help":
             print_menu()
             continue
-        elif user_input in ['1', '2', '3', '4']: #TODO: add llm involvement for 3 and 5. might need to separate these out
+        elif user_input in ['1', '2', '3', '4']:
             print(f"  Processing CALDERA action {user_input}...\n") 
             response = handle_menu_pick(user_input, agent)
             print(f"\n{response}")
