@@ -117,7 +117,7 @@ DELETE PAYLOAD: {ability['delete_payload']}
 	except Exception:
 		return False
 
-# Adversaries (work in progress)
+# Adversaries
 def show_adversaries():
 	try:
 		r = requests.get(f"{CALDERA_URL}/api/v2/adversaries", headers = HEADERS, timeout=7)
@@ -212,7 +212,6 @@ def get_operation_ids():
 	except Exception:
 		return False
 
-#TODO: Look at output and figure out how to parse relevant data to pass to LLM.
 def get_reports(id):
 	payload = {"enable_agent_output": "True"} #Gets stdout and stderr details from the report. False omits them.
 	r = requests.post(f"{CALDERA_URL}/api/v2/operations/{id}/report", headers = HEADERS, json=payload, timeout=7)
