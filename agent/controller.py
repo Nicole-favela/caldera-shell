@@ -23,9 +23,7 @@ class AgentController:
         if context or messages:
             messages = [{"role": "system", "content": f"Current state: {context}"}]
             messages += self.memory.get_messages()
-            # messages.append({"role": "user", "content": user_input})
         llm_response = generate_chat(messages, system=SYSTEM_PROMPT)#, system = SYSTEM_PROMPT)
-        #action = parse_action() #TODO: implement this to either return json for caldera or None if it's just a regular question
         
         self.memory.add_assistant(llm_response)
         return llm_response
@@ -51,7 +49,6 @@ class AgentController:
         """
         uses caldera client to list agents and formats as a string
         """
-        #agents = caldera.show_agents()
         agents = caldera.get_agents()
         if not agents:
             res = "Error retrieving agents."
