@@ -69,7 +69,6 @@ HELP_MENU = """
 1. Show connected agents
     - Lists all agents currently connected to CALDERA, along with details like their platform, host, and status.
 
-""" #TODO: ADD DETAILED EXPLANATIONS OF EACH ITEM/OPTION FOR THAT THE USER CAN SELECT. 
 from caldera.client import health_check, show_agents as list_agents, show_adversaries as list_adversaries, create_agent,create_agent2, create_operation, find_operation
 from agent.controller import AgentController
 import time
