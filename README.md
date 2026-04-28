@@ -75,10 +75,9 @@ You: what is lateral movement?
  `help`   | View menu options again                                  |
  | `1` | Show connected agents      |
 | `2` | List available adversaries    |
-| `3`  | Run an operation     |
-| `4`   |   Check operation status                                |
- `5`   | Get & explain operation results                                  |
-  `6`   |   Stop current operation                                |
+| `3`   |   Check operation status                                |
+ `4`   | Get & explain operation results                                  |
+
 
 
 
@@ -87,4 +86,3 @@ You: what is lateral movement?
 ## Troubleshooting
 **`Cannot reach Ollama`**
 Ollama is not running. Start it with `OLLAMA_HOST=0.0.0.0:11434 ollama serve` in a separate terminal on host machine (Mac).
-<!-- TODO: add instructions for windows host machine as well or any differences in ollama installation>
